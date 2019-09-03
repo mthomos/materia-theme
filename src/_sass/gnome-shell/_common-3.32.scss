@@ -210,13 +210,6 @@ StScrollBar {
   &:checked { background-image: url("assets/toggle-on.svg"); }
 }
 
-  @each $v in us, intl {
-    .toggle-switch-#{$v} {
-      background-image: url("assets/toggle-off.svg");
-      &:checked { background-image: url("assets/toggle-on.svg"); }
-    }
-  }
-
 /* links */
 .shell-link {
   transition-duration: $duration;
@@ -634,10 +627,14 @@ StScrollBar {
     -arrow-base: 0;
     -arrow-rise: 0;
     -arrow-box-shadow: none; //dreaming. bug #689995
-    margin: 5px 8px 8px;
-    background-color: $surface;
-    border-radius: $corner-radius;
-    box-shadow: $shadow-2;
+
+    @at-root .popup-menu-content,
+    .candidate-popup-content {
+      margin: 5px 8px 8px;
+      background-color: $surface;
+      border-radius: $corner-radius;
+      box-shadow: $shadow-2;
+    }
   }
 
   .popup-separator-menu-item {
@@ -1361,8 +1358,14 @@ StScrollBar {
   background-image: none;
 }
 
+// Rubberband for select-area screenshots
+.select-area-rubberband {
+  background-color: rgba($primary-light, 0.3);
+  border: 1px solid $primary-light;
+}
+
 // not really top bar only
-.popup-menu-arrow { width: 16px; height: 16px; icon-size: em(16px); }
+.popup-menu-arrow { icon-size: em(16px); }
 .popup-menu-icon { icon-size: em(16px); }
 
 //close buttons

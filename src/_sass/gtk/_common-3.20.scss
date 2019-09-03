@@ -455,7 +455,7 @@ button {
       @extend %circular_button;
     }
 
-    // NOTE: sometimes image-only buttons use this
+    // NOTE: Some image-only buttons use this as well
     &.text-button.image-button {
       min-width: 24px;
       padding: ($medium-size - 24px) / 2;
@@ -479,13 +479,13 @@ button {
     .linked:not(.vertical) > & {
       @extend %linked;
 
-      &.image-button { @extend %linked-image-button; }
+      &.image-button:not(.text-button) { @extend %linked-image-button; }
     }
 
     .linked.vertical > & {
       @extend %linked-vertical;
 
-      &.image-button { @extend %linked-vertical-image-button; }
+      &.image-button:not(.text-button) { @extend %linked-vertical-image-button; }
     }
 
     .linked:not(.vertical) > &.flat,
@@ -493,14 +493,12 @@ button {
       &:not(:only-child) { // specificity bump
         border-radius: $corner-radius;
 
-        &.image-button { border-radius: $circular-radius; }
-
-        &.text-button.image-button { border-radius: $corner-radius; }
+        &.image-button:not(.text-button) { border-radius: $circular-radius; }
       }
     }
   }
 
-  @at-root %button_selected {
+  @at-root %button-on-dark {
     &.flat {
       color: on(dark, secondary);
 
@@ -1316,7 +1314,7 @@ window.devel .titlebar:not(.selection-mode) {
  * Pathbars *
  ************/
 %pathbar_button,
-.path-bar button {
+.path-bar.linked:not(.vertical) > button {
   @extend %button-flat;
 
   padding-left: ($medium-size - 24px) / 2;
@@ -1646,7 +1644,7 @@ popover.background {
 
   &.menu button,
   button.model {
-    @extend %button-flat;
+    @extend %button_basic.flat;
 
     min-height: 32px;
     padding: 0 8px;
@@ -2780,7 +2778,11 @@ row {
 
   margin: 8px;
 
-  button { @extend %button_basic.flat; }
+  button {
+    @extend %button_basic.flat;
+
+    &.text-button:not(:disabled) { color: $primary; }
+  }
 
   &.frame,
   border { border-style: none; }
@@ -2962,6 +2964,7 @@ stacksidebar.sidebar {
 
     &:selected {
       background-color: $overlay-checked;
+      color: $primary;
       font-weight: 500;
     }
 
@@ -2991,8 +2994,11 @@ separator.sidebar {
  * File chooser *
  ****************/
 // dim the sidebar icons, see bug #786613 for details on this oddity
-row {
-  image.sidebar-icon { color: $text-secondary; }
+row image.sidebar-icon {
+  transition: color $duration $ease-out;
+  color: $text-secondary;
+
+  &:disabled { color: $text-secondary-disabled; }
 }
 
 placessidebar.sidebar {
@@ -3013,7 +3019,10 @@ placessidebar.sidebar {
 
     &:selected {
       background-color: $overlay-checked;
+      color: $primary;
       font-weight: 500;
+
+      image.sidebar-icon { color: $primary; }
     }
 
     &:disabled { color: $text-disabled; }
@@ -3024,12 +3033,11 @@ placessidebar.sidebar {
     }
 
     label.sidebar-label {
+      color: inherit;
+
       &:dir(ltr) { padding-right: 2px; }
       &:dir(rtl) { padding-left: 2px; }
     }
-
-    &:selected image.sidebar-icon,
-    &:selected label.sidebar-label { color: inherit; }
 
     @at-root button.sidebar-button {
       @extend %button-flat-simple;
@@ -3038,7 +3046,11 @@ placessidebar.sidebar {
 
     &.sidebar-placeholder-row { background-color: $overlay-hover; }
 
-    &.sidebar-new-bookmark-row { color: $primary; }
+    &.sidebar-new-bookmark-row {
+      color: $primary;
+
+      image.sidebar-icon { color: $primary; }
+    }
 
     &:drop(active) { @extend row:hover; }
   }
@@ -3132,14 +3144,9 @@ infobar {
     background-color: $base;
 
     button {
-      @extend %button-flat-simple;
+      @extend %button_basic.flat;
 
-      &.text-button {
-        padding-left: 8px;
-        padding-right: 8px;
-
-        &:not(:disabled) { color: $primary; }
-      }
+      &.text-button:not(:disabled) { color: $primary; }
     }
   }
 
@@ -3147,7 +3154,7 @@ infobar {
     background-color: $warning;
     color: on($warning);
 
-    // button { @extend %button_selected; }
+    // button { @extend %button-on-dark; }
 
     selection {}
 
@@ -3158,7 +3165,7 @@ infobar {
     background-color: $error;
     color: on($error);
 
-    button { @extend %button_selected; }
+    button { @extend %button-on-dark; }
 
     selection {}
 
@@ -3341,7 +3348,7 @@ colorchooser .popover.osd {
 decoration {
   transition: $transition-shadow;
   border-radius: $corner-radius $corner-radius 0 0;
-  box-shadow: $shadow-z16, 0 6px (30px * .6) 5px transparent;
+  box-shadow: $shadow-z16, 0 16px (24px * .6) 2px transparent, 0 6px (30px * .6) 5px transparent;
 
   // FIXME rationalize shadows
 
@@ -3353,7 +3360,7 @@ decoration {
     // change when we go to backdrop, to prevent jumping windows.
     // The biggest shadow should be in the same order then in the active state
     // or the jumping will happen during the transition.
-    box-shadow: $shadow-z4, 0 6px (30px * .6) 5px transparent;
+    box-shadow: $shadow-z4, 0 16px (24px * .6) 2px transparent, 0 6px (30px * .6) 5px transparent;
   }
 
   .maximized &,
@@ -3381,9 +3388,9 @@ decoration {
 
   messagedialog.csd & {
     border-radius: $corner-radius;
-    // box-shadow: $shadow-z24, 0 9px (46px * .6) 8px transparent;
+    // box-shadow: $shadow-z24, 0 24px (38px * .6) 3px transparent, 0 9px (46px * .6) 8px transparent;
 
-    // &:backdrop { box-shadow: $shadow-z4, 0 9px (46px * .6) 8px transparent; }
+    // &:backdrop { box-shadow: $shadow-z4, 0 24px (38px * .6) 3px transparent, 0 9px (46px * .6) 8px transparent; }
   }
 
   .solid-csd & {
