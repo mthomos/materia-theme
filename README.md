@@ -63,14 +63,17 @@ Supports **ripple animations** for GTK 3:
 
 ### Distro Packages
 
-Distro | Package Name / Link
---- | ---
-Arch Linux | `materia-gtk-theme`
-Debian 10 or later | `materia-gtk-theme`
-Fedora | `materia-gtk-theme` from [@LaurentTreguier's Copr](https://copr.fedorainfracloud.org/coprs/tcg/themes)
-Solus | `materia-gtk-theme`
-Ubuntu 18.04 or later | `materia-gtk-theme`
-Ubuntu 17.10 | `materia-gtk-theme` from [@igor-dyatlov's PPA](https://launchpad.net/~dyatlov-igor/+archive/ubuntu/materia-theme)
+Distro | Package Name | Annotation
+--- | --- | ---
+Arch Linux | `materia-gtk-theme` | [Link](https://www.archlinux.org/packages/community/any/materia-gtk-theme/)
+Debian 10 or later | `materia-gtk-theme` | [Link](https://packages.debian.org/materia-gtk-theme)
+Fedora | `materia-gtk-theme` | Available from [@LaurentTreguier's Copr](https://copr.fedorainfracloud.org/coprs/tcg/themes)
+Solus | `materia-gtk-theme` | [Link](https://dev.getsol.us/source/materia-gtk-theme/)
+Ubuntu 18.04 or later | `materia-gtk-theme` | [Link](https://packages.ubuntu.com/materia-gtk-theme)
+
+<!-- For contributors, please add your package alphabetically! -->
+
+> Note: Some distro packages (especially Ubuntu ones) may be outdated and incompatible with your desktop environment. You can check the latest version [here](https://github.com/nana-4/materia-theme/releases).
 
 ### Flatpak
 
@@ -99,6 +102,7 @@ sudo ./install.sh
 -c, --color VARIANT...  Specify color variant(s) [standard|dark|light] (Default: All variants)
 -s, --size VARIANT      Specify size variant [standard|compact] (Default: All variants)
 -g, --gdm               Install and apply GDM theme (for advanced users)
+                        See also: src/gnome-shell/README.md
 -h, --help              Show help
 ```
 

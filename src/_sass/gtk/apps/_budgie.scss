@@ -212,7 +212,7 @@ button.raven-trigger {
 .budgie-panel {
   transition: background-color $duration $ease-out;
   background-color: $panel;
-  color: on($panel, secondary);
+  color: on($panel, text2);
   font-weight: 500;
 
   &.transparent { background-color: $scrim; }
@@ -231,10 +231,10 @@ button.raven-trigger {
 
   &.vertical button { padding: 4px 0; }
 
-  separator { background-color: on($panel, track); }
+  separator { background-color: on($panel, stroke); }
 
   // used to indicate unread notifications
-  .alert { color: $destructive; }
+  .alert { color: on($panel, primary); }
 
   // End Section needs to be fancy
   .end-region {
@@ -250,7 +250,7 @@ button.raven-trigger {
     color: on($panel);
 
     button:not(.suggested-action):not(.destructive-action) {
-      color: on($panel, secondary);
+      color: on($panel, text2);
 
       &:hover,
       &:active { color: on($panel); }
@@ -274,11 +274,11 @@ button.raven-trigger {
 
     // for indicator colors
     &:not(:checked) {
-      color: on($panel, disabled);
+      color: on($panel, text-disabled);
 
-      &:hover, &:active { color: on($panel, secondary); }
+      &:hover, &:active { color: on($panel, text2); }
 
-      &:disabled { color: on($panel, secondary-disabled); }
+      &:disabled { color: on($panel, text2-disabled); }
     }
   }
 
@@ -336,24 +336,6 @@ $pos_list: ((top, bottom), (bottom, top), (left, right), (right, left));
 
   > box { margin-bottom: -10px; } // remove extra space between box and .raven-header.bottom
 
-  stackswitcher.linked > button {
-    @extend %button-flat;
-
-    border-image: radial-gradient(circle closest-corner at center calc(100% - 1px),
-                                  $primary 0%,
-                                  transparent 0%)
-                                  0 0 0 / 0 0 0px;
-    border-radius: 0;
-
-    &:checked {
-      border-image: radial-gradient(circle closest-corner at center calc(100% - 1px),
-                                    $primary 100%,
-                                    transparent 0%)
-                                    0 0 2 / 0 0 2px;
-      background-color: transparent;
-    }
-  }
-
   .raven-header {
     min-height: $medium-size;
     padding: 3px;
@@ -362,10 +344,25 @@ $pos_list: ((top, bottom), (bottom, top), (left, right), (right, left));
       padding: 0;
       border-bottom: 1px solid $divider;
 
-      stackswitcher button {
+      stackswitcher.linked > button {
+        @extend %button-flat;
+
         margin: -4px 0 -5px; // remove unwanted vertical margins
         padding: 0 16px;
         min-height: $large-size;
+        border-image: radial-gradient(circle closest-corner at center calc(100% - 1px),
+                                      $primary 0%,
+                                      transparent 0%)
+                                      0 0 0 / 0 0 0px;
+        border-radius: 0;
+
+        &:checked {
+          border-image: radial-gradient(circle closest-corner at center calc(100% - 1px),
+                                        $primary 100%,
+                                        transparent 0%)
+                                        0 0 2 / 0 0 2px;
+          background-color: transparent;
+        }
       }
     }
 
@@ -381,17 +378,30 @@ $pos_list: ((top, bottom), (bottom, top), (left, right), (right, left));
   .expander-button { @extend %circular_button; }
 
   .raven-background {
-    border-style: solid none;
-    border-width: 1px;
-    border-color: $divider;
-    background-color: $base;
-
     // &.middle { border-bottom-style: none; } // applet background between two headers
 
-    > overlay > widget > image { color: $divider; }
+    // Choice chips
+    stackswitcher.linked > button {
+      @extend %button-flat;
+
+      margin: -4px 8px 8px;
+      padding: 0 12px;
+      min-height: 32px;
+      border-radius: $circular-radius;
+      background-color: $fill;
+      font-weight: normal;
+
+      &:checked { color: $primary; }
+
+      &:not(:first-child) { margin-left: 0; }
+    }
+
+    > overlay > widget > image { color: $fill; }
   }
 
-  scrolledwindow.raven-background { border-bottom-style: none; }
+  revealer > .raven-background { border-bottom: 1px solid $divider; }
+
+  .raven-header + .raven-background { border-top: 1px solid $divider; }
 
   .powerstrip button {
     margin: 2px 0 1px;
@@ -434,7 +444,7 @@ calendar.raven-calendar {
 .budgie-notification {
   .notification-title { font-size: 120%; }
 
-  .notification-body { color: $text-secondary; }
+  .notification-body { color: $text2; }
 }
 
 // On Screen Display in Budgie
@@ -464,9 +474,13 @@ calendar.raven-calendar {
   box-shadow: $shadow-z4, inset 0 1px highlight($surface);
   background-color: $surface;
 
-  button { @extend %button-flat-simple; }
+  button {
+    @extend %button_basic.flat;
 
-  .linked > button { border-radius: $corner-radius; }
+    &.text-button:not(:disabled) { color: $primary; }
+  }
+
+  .linked > button { margin-right: $container-padding; }
 }
 
 %budgie_dialog {
@@ -481,19 +495,29 @@ calendar.raven-calendar {
 .budgie-session-dialog {
   @extend %budgie_dialog;
 
+  > box { padding: 8px; }
+
+  // Hide power icon
+  image {
+    margin: -8px;
+    -gtk-icon-transform: scale(0);
+  }
+
   label:not(:last-child),
-  .dialog-title { font-size: 120%; }
+  .dialog-title {
+    margin-bottom: 8px;
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  .dialog-title + label { color: $text2; }
 
   .linked.horizontal > button {
-    padding: 8px 16px;
-    border-top: 1px solid $divider;
-    border-radius: 0;
+    @extend %button_basic.flat;
 
-    @extend %button-flat-simple;
+    &:not(:last-child) { margin-right: 8px; }
 
-    &:first-child { border-bottom-left-radius: $corner-radius; }
-
-    &:last-child { border-bottom-right-radius: $corner-radius; }
+    &:not(:disabled) { color: $primary; }
   }
 }
 
@@ -501,16 +525,14 @@ calendar.raven-calendar {
 .budgie-polkit-dialog {
   @extend %budgie_dialog;
 
-  .message { color: $text-secondary; }
+  .message { color: $text2; }
 
-  .failure { color: $destructive; }
+  .failure { color: $error; }
 }
 
 // Run Dialog
 .budgie-run-dialog {
   @extend %budgie_dialog;
-
-  background-color: $base;
 
   entry.search {
     font-size: 120%;
@@ -520,7 +542,24 @@ calendar.raven-calendar {
     background-color: transparent;
   }
 
-  list .dim-label { color: $text; }
+  list {
+    padding: 4px 0;
+    background-color: transparent;
+
+    .dim-label { color: inherit; }
+  }
 
   scrolledwindow { border-top: 1px solid $divider; }
+
+  scrollbar {
+    &.right,
+    &.bottom {
+      border-bottom-right-radius: $corner-radius;
+    }
+
+    &.left,
+    &.bottom {
+      border-bottom-left-radius: $corner-radius;
+    }
+  }
 }
